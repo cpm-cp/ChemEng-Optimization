@@ -254,9 +254,9 @@ class OptimizationAnalyzer:
                     [positions[0], positions[1]],
                     [cold_temps[0], cold_temps[1]],
                     [hot_temps[0], hot_temps[1]],
-                    color='#BEB1D9', alpha=0.15
+                    color='#BEB1D9', alpha=0.25
                 )
-                ax.text(Q / 2.5, (hot_temps[0] + hot_temps[1]) / 2.5, "Zone",
+                ax.text(Q / 2.5, (hot_temps[0] + hot_temps[1]) / 4, "Zone",
                         ha='center', bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8))
 
             # Set axis labels and grid
