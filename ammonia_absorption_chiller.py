@@ -85,7 +85,7 @@ class AbsorberChillingSystem:
         Q2_zoneII = self.ammonia_mass["5"] * ThermalConstants.HEAT_CAPACITY * (temperature - self.temperatures["4"])
         Q2_zoneI = Q_heat_II - Q2_zoneII
 
-        self.temperatures["2I"] = self.temperatures["cw_in"] + Q2_zoneI / (cold_mass_flow * ThermalConstants.HEAT_CAPACITY)
+        self.temperatures["2I"] = self.temperatures["cw_in"] + Q2_zoneII / (cold_mass_flow * ThermalConstants.HEAT_CAPACITY)
 
         lmtd_2 = [
             log_mean_temperature((self.temperatures["4"] - self.temperatures["cw_in"]), (temperature - self.temperatures["2I"])),
@@ -202,7 +202,7 @@ class OptimizationAnalyzer:
                     [positions[1], positions[2]],
                     [cold_temps[1], cold_temps[2]],
                     [hot_temps[1], hot_temps[2]],
-                    color='#BEB1D9', alpha=0.17
+                    color='#BEB1D9', alpha=0.25
                 )
 
                 ax.text(Q_zoneI / 2, (hot_temps[1] + hot_temps[2]) / 3.5, "Zone I",
@@ -211,25 +211,36 @@ class OptimizationAnalyzer:
                         ha='center', bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8))
 
             elif ex == "E-102":
-                hot_temps = [temperature, temperature, system.temperatures["4"]]
-                cold_temps = [system.temperatures["cw_out"], system.temperatures["2I"], system.temperatures["cw_in"]]
+                hot_temps = [system.temperatures["4"], temperature, temperature]
+                cold_temps = [system.temperatures["cw_in"], system.temperatures["2I"], system.temperatures["cw_out"]]
 
                 Q_heat_II = system.ammonia_mass["5"] * ThermalConstants.HEAT_CAPACITY * (temperature - system.temperatures["4"]) + ThermalConstants.VAPORIZATION_HEAT * system.ammonia_mass["5"]
                 Q2_zoneII = system.ammonia_mass["5"] * ThermalConstants.HEAT_CAPACITY * (temperature - system.temperatures["4"])
                 Q2_zoneI = Q_heat_II - Q2_zoneII
-                positions = [0, Q2_zoneI, Q2_zoneI + Q2_zoneII]
+                positions = [0, Q2_zoneII, Q2_zoneI + Q2_zoneII]
 
                 ax.plot(positions, hot_temps, color='#FF5733', lw=2.5, label='Hot Stream (Ammonia)')
                 ax.plot(positions, cold_temps, color='#3498DB', lw=2.5, label='Cold Stream (Cooling Water)')
 
-                ax.axvspan(0, Q2_zoneI, alpha=0.15, color='#FF5733')
-                ax.axvspan(Q2_zoneI, Q2_zoneI + Q2_zoneII, alpha=0.15, color='#3498DB')
+                ax.fill_between(
+                    [positions[0], positions[1]],
+                    [cold_temps[0], cold_temps[1]],
+                    [hot_temps[0], hot_temps[1]],
+                    color='#BEB1D9', alpha=0.15
+                )
+                ax.fill_between(
+                    [positions[1], positions[2]],
+                    [cold_temps[1], cold_temps[2]],
+                    [hot_temps[1], hot_temps[2]],
+                    color='#BEB1D9', alpha=0.25
+                )
 
-                ax.text(Q2_zoneI/2, (hot_temps[0] + hot_temps[1])/2 + 2, "Zone I", 
+                ax.text(Q2_zoneII / 2, (hot_temps[1] + hot_temps[2]) / 5, "Zone I",
                         ha='center', bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8))
-                ax.text(Q2_zoneI + Q2_zoneII/2, (hot_temps[1] + hot_temps[2])/2 + 2, "Zone II", 
+                ax.text((Q2_zoneI + Q2_zoneII) / 2, (hot_temps[0] + hot_temps[1]) / 2, "Zone II",
                         ha='center', bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8))
-
+                
+                
             elif ex == "E-103":
                 hot_temps = [system.temperatures["10"], system.temperatures["9"]]
                 cold_temps = [system.temperatures["6"], system.temperatures["5"]]
@@ -238,8 +249,15 @@ class OptimizationAnalyzer:
 
                 ax.plot(positions, hot_temps, color='#FF5733', lw=2.5, label='Hot Stream (Chilled Water)')
                 ax.plot(positions, cold_temps, color='#3498DB', lw=2.5, label='Cold Stream (Refrigerant)')
-
-                ax.axvspan(0, Q, alpha=0.15, color='#A569BD')
+                
+                ax.fill_between(
+                    [positions[0], positions[1]],
+                    [cold_temps[0], cold_temps[1]],
+                    [hot_temps[0], hot_temps[1]],
+                    color='#BEB1D9', alpha=0.15
+                )
+                ax.text(Q / 2.5, (hot_temps[0] + hot_temps[1]) / 2.5, "Zone",
+                        ha='center', bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.8))
 
             # Set axis labels and grid
             ax.set_xlabel('Heat Transfer [kW]', fontweight='bold')
@@ -615,9 +633,11 @@ class AbsorberChillingUI:
                 ),
                 bgcolor="#d32f2f"
             )
-            self.page.snack_bar = snack_bar
+            if snack_bar not in self.page.overlay:
+                self.page.overlay.append(snack_bar)
             snack_bar.open = True
             self.page.update()
+
     
     async def on_show_temp_profiles(self, e):
         """Handle show temperature profiles button click event."""
