@@ -105,7 +105,7 @@ class OptimizationAnalyzer:
             'ytick.labelsize': 10
         })   
         
-        plt.figure(figsize=(8, 5), dpi=1000)
+        plt.figure(figsize=(8, 6), dpi=1000)
         
         # Plot each line based on visibility flags
         if show_eaoc:
@@ -217,7 +217,7 @@ class BioreactorUI:
         self.temperature_start = ft.TextField(
             label="Start Temperature [°C]",
             value="25",
-            width=180,
+            width=220,
             height=50,
             text_size=12,
             border_radius=6,
@@ -228,7 +228,7 @@ class BioreactorUI:
         self.temperature_end = ft.TextField(
             label="End temperature [°C]",
             value="64",
-            width=180,
+            width=220,
             height=50,
             text_size=12,
             border_radius=6,
@@ -239,7 +239,7 @@ class BioreactorUI:
         self.steps = ft.TextField(
             label="Steps",
             value="2000",
-            width=100,
+            width=120,
             height=50,
             text_size=12,
             border_radius=6,
@@ -250,7 +250,7 @@ class BioreactorUI:
         self.conversion = ft.TextField(
             label="Reactant conversion [%]",
             value="0.8",
-            width=150,
+            width=200,
             height=50,
             text_size=12,
             border_radius=6,
@@ -311,10 +311,10 @@ class BioreactorUI:
                 spacing=8,
                 horizontal_alignment=ft.CrossAxisAlignment.START
             ),
-            padding=10,
+            padding=5,
             border_radius=8,
             bgcolor=ft.colors.WHITE,
-            width=300,
+            width=270,
             visible=False,
             shadow=ft.BoxShadow(
                 spread_radius=1,
@@ -387,9 +387,9 @@ class BioreactorUI:
                     ], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Row([
                         self.generate_btn
-                    ], alignment=ft.MainAxisAlignment.CENTER, spacing=12)
-                ], spacing=10, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                padding=10
+                    ], alignment=ft.MainAxisAlignment.CENTER, spacing=10)
+                ], spacing=5, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                padding=5
             ),
             elevation=2
         )
@@ -405,7 +405,7 @@ class BioreactorUI:
                             ft.Container(
                                 content=ft.Row([
                                     self.eaoc_switch,
-                                    ft.Container(width=20),
+                                    ft.Container(width=18),
                                     self.pchx_switch
                                 ]),
                                 padding=5
@@ -413,7 +413,7 @@ class BioreactorUI:
                             ft.Container(
                                 content=ft.Row([
                                     self.pcrx_switch,
-                                    ft.Container(width=20),
+                                    ft.Container(width=18),
                                     self.uc_switch
                                 ]),
                                 padding=5
@@ -421,7 +421,7 @@ class BioreactorUI:
                         ], spacing=0)
                     ], alignment=ft.MainAxisAlignment.CENTER)
                 ], spacing=5, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                padding=10
+                padding=5
             ),
             elevation=2
         )
@@ -435,7 +435,7 @@ class BioreactorUI:
                 ], alignment=ft.MainAxisAlignment.CENTER, spacing=15, vertical_alignment=ft.CrossAxisAlignment.START),
                 self.optimal_container
             ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-            margin=ft.margin.only(top=18),
+            margin=ft.margin.only(top=10),
             expand=True
         )
         
@@ -682,7 +682,7 @@ class BioreactorUI:
             eaoc_optimal = optimal_values.get('eaoc')
             if eaoc_optimal and full_result:
                 self.results.content = ft.Column([
-                    ft.Text("Optimization Results", size=18, weight=ft.FontWeight.BOLD, color="#2B47B9"),
+                    ft.Text("Optimization Results", size=16, weight=ft.FontWeight.BOLD, color="#2B47B9"),
                     ft.Divider(height=0.5, color="#E0E0E0"),
                     ft.Row([
                         ft.Icon(ft.icons.THERMOSTAT, color="#2B47B9"),
@@ -719,12 +719,12 @@ class BioreactorUI:
                                 ft.Text(f"UC: ", weight=ft.FontWeight.BOLD),
                                 ft.Text(f"{full_result[5]:.2f} $/yr")
                             ])
-                        ], spacing=10),
-                        padding=10,
+                        ], spacing=15),
+                        padding=15,
                         bgcolor="#f5f5f5",
                         border_radius=6
                     )
-                ], spacing=10)
+                ], spacing=15)
             
             # Update the optimal values display
             self.update_optimal_display()
