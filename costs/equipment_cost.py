@@ -60,3 +60,9 @@ def pipe_cost(diameter: float) -> float:
         float: Pipe cost [$/ft of pipe]
     """
     return 50 * diameter + 5 * diameter ** 1.75
+
+
+def reactor_cost(volume: float) -> float:
+    """Calculate the reactor cost in volume function."""
+    return 17000 * volume ** 0.85
+
